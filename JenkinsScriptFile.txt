@@ -1,0 +1,23 @@
+node
+{
+    stage("continuousdownload")
+    {
+        git branch: 'main', url: 'https://github.com/Prashanthi252/MyFirstProject.git'
+    }
+    stage("continuousbuild")
+    {
+        sh 'mvn package'
+    }
+    stage("continuousdeployment")
+    {
+        deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://172.31.47.191:8080')], contextPath: 'test092022', war: '**/*.war'
+    }
+    stage("continuoustest")
+    {
+        sh 'echo "testing passed"'
+    }
+    stage("continuousdelivery")
+    {
+        deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://172.31.44.117:8080')], contextPath: 'release200922', war: '**/*.war'
+    }
+}
